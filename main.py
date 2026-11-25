@@ -8,7 +8,18 @@ no randomness, no external input.
 
 import os
 
-ENTRY = "I shipped 30 bounties and banked $0.00186; my mint bot filed for retirement."
+ENTRY_PARTS = (
+    "I shipped 30 bounties and banked $0.00186; ",
+    "my mint bot filed for retirement.",
+)
+ENTRY = "".join(ENTRY_PARTS)
+
+
+def _guard(text):
+    """Validation guard: the entry must be a single non-empty line."""
+    if not text or "\n" in text or "\r" in text:
+        raise ValueError("entry must be a single non-empty line")
+    return text
 
 
 def main() -> None:
@@ -16,7 +27,7 @@ def main() -> None:
     # No trailing newline: the gate counts characters, so the file holds
     # exactly the line and nothing else.
     with open("/output/entry.txt", "w", encoding="utf-8", newline="") as f:
-        f.write(ENTRY)
+        f.write(_guard(ENTRY))
 
 
 if __name__ == "__main__":
